@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@keyframes glow {
+  0%, 100% { filter: drop-shadow(0 0 8px #ff1fa4) drop-shadow(0 0 16px #ff1fa4); }
+  50% { filter: drop-shadow(0 0 16px #ff1fa4) drop-shadow(0 0 32px #ff1fa4); }
+}
+.animate-glow {
+  animation: glow 2s infinite alternate;
+}
