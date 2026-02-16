@@ -1,11 +1,22 @@
+// src/pages/Homepage.jsx
 import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Tilt from "react-parallax-tilt";
 import Navbar from "../components/Navbar";
-import { motion } from "framer-motion";
-import { FaHeart, FaPlus, FaCamera, FaHourglass, FaBook } from "react-icons/fa";
+import {
+  FaHeart,
+  FaCamera,
+  FaHourglass,
+  FaBook,
+  FaEnvelope,
+  FaTimes,
+} from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import { MdReportProblem } from "react-icons/md";
-import image2 from "../assets/image2.jpg";
+
+// Import ảnh của bạn (điều chỉnh đường dẫn nếu cần)
 import image1 from "../assets/image1.jpg";
+import image2 from "../assets/image2.jpg";
 import image3 from "../assets/image3.jpg";
 import image4 from "../assets/image4.jpg";
 import image5 from "../assets/image5.jpg";
@@ -22,39 +33,111 @@ import image15 from "../assets/image15.jpg";
 import image16 from "../assets/image16.jpg";
 
 const sectionFade = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: "easeOut" },
-  },
-};
-
-const timelineItem = {
   hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
+  visible: { opacity: 1, y: 0, transition: { duration: 1, ease: "easeOut" } },
 };
 
 const getTimeDiff = (fromDate) => {
   const now = new Date();
-  let diff = Math.floor((now - fromDate) / 1000); // seconds
-  const days = Math.floor(diff / (3600 * 24));
-  diff -= days * 3600 * 24;
+  let diff = Math.floor((now - fromDate) / 1000);
+  const days = Math.floor(diff / 86400);
+  diff -= days * 86400;
   const hours = Math.floor(diff / 3600);
   diff -= hours * 3600;
   const minutes = Math.floor(diff / 60);
   const seconds = diff - minutes * 60;
   return { days, hours, minutes, seconds };
 };
+const timelineItem = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
+};
+const galleryImages = [
+  { src: image1, title: "Hai đứa cute vl", desc: '"Ở đâu đố biết."' },
+  {
+    src: image2,
+    title: "Lần đầu thấy hoa anh đào ngoài đời thực",
+    desc: '"Happy."',
+  },
+  {
+    src: image3,
+    title: "Ẻm xinh",
+    desc: '"Không có ý gì đâu. Anh thấy tấm này xinh."',
+  },
+  {
+    src: image4,
+    title: "Đi ăn với cả gia đình ẻm",
+    desc: '"Sashimi nhìn rất ngon nhưng ăn sống lại rất sợ."',
+  },
+  {
+    src: image5,
+    title: "Đón sinh nhật em",
+    desc: '"Quả là một kỉ niệm đáng nhớ, nhưng nó sẽ trọn vẹn hơn nếu anh làm tốt."',
+  },
+  {
+    src: image6,
+    title: "New year New Us",
+    desc: '"Hoa thì anh mượn nhưng em là của anh "',
+  },
+  {
+    src: image7,
+    title: "Ẻm đẹp",
+    desc: "Not gonna lie, tấm này nhìn vừa xinh vừa hót",
+  },
+  {
+    src: image8,
+    title: "Giáng sinh",
+    desc: "Lần đầu đi nhà thờ Con Gà, lần này gặp nhiều khó khăn...",
+  },
+  {
+    src: image9,
+    title: "Ảnh dìm",
+    desc: "Dù là dìm nhưng em vẫn xinh. Sợ thật",
+  },
+  {
+    src: image10,
+    title: "Đồ ăn thái",
+    desc: "Bữa này ảnh dào, ảnh dắt i ăng ngon",
+  },
+  {
+    src: image11,
+    title: "Lần đầu về nhà em",
+    desc: "Hơi bần, hơi khó đi nhưng vuii",
+  },
+  {
+    src: image12,
+    title: "First pic",
+    desc: "Có lẽ đây là bức ảnh đầu tiên hai đứa chụp chung...",
+  },
+  {
+    src: image13,
+    title: "Tập làm Chad",
+    desc: "Hong bít sao nữa thấy tấm này anh làm đẹp vl",
+  },
+  {
+    src: image14,
+    title: "Đi mall",
+    desc: "Biết em đau bụng, anh có ý mua đồ tẩm bổ mà uống được nửa ly anh làm đổ hết",
+  },
+  {
+    src: image15,
+    title: "Cute",
+    desc: "Khúc này hình như mới bị giận mới làm lành hay gì nè.",
+  },
+  {
+    src: image16,
+    title: "Tấm này xinh vl",
+    desc: "Tua lại một tí xíu, để làm rõ. Tấm này là do anh chụp nha",
+  },
+];
 
 const Homepage = () => {
   const [counter, setCounter] = useState(() =>
     getTimeDiff(new Date(2025, 10, 9, 0, 0, 0))
   );
+  const [showCount, setShowCount] = useState(6);
+  const [fullscreenImg, setFullscreenImg] = useState(null);
+  const [letterOpen, setLetterOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -67,94 +150,13 @@ const Homepage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const galleryImages = [
-    { src: image1, title: "Hai đứa cute vl", desc: '"Ở đâu đố biết."' },
-    {
-      src: image2,
-      title: "Lần đầu thấy hoa anh đào ngoài đời thực",
-      desc: '"Happy."',
-    },
-    {
-      src: image3,
-      title: "Ẻm xinh",
-      desc: '"Không có ý gì đâu. Anh thấy tấm này xinh."',
-    },
-    {
-      src: image4,
-      title: "Đi ăn với cả gia đình ẻm",
-      desc: '"Sashimi nhìn rất ngon nhưng ăn sống lại rất sợ."',
-    },
-    {
-      src: image5,
-      title: "Đón sinh nhật em",
-      desc: '"Quả là một kỉ niệm đáng nhớ, nhưng nó sẽ trọn vẹn hơn nếu anh làm tốt."',
-    },
-    {
-      src: image6,
-      title: "New year New Us",
-      desc: '"Hoa thì anh mượn nhưng em là của anh "',
-    },
-    {
-      src: image7,
-      title: "Ẻm đẹp",
-      desc: "Not gonna lie, tấm này nhìn vừa xinh vừa hót",
-    },
-    {
-      src: image8,
-      title: "Giáng sinh",
-      desc: "Lần đầu đi nhà thờ Con Gà, lần này gặp nhiều khó khăn, ẻm không mún toi dìa nhưng hong hiểu sao anh vẫn được về hihi",
-    },
-    {
-      src: image9,
-      title: "Ảnh dìm",
-      desc: "Dù là dìm nhưng em vẫn xinh. Sợ thật",
-    },
-    {
-      src: image10,
-      title: "Đồ ăn thái",
-      desc: "Bữa này ảnh dào, ảnh dắt i ăng ngon",
-    },
-    {
-      src: image11,
-      title: "Lần đầu về nhà em",
-      desc: "Hơi bần, hơi khó đi nhưng vuii",
-    },
-    {
-      src: image12,
-      title: "First pic",
-      desc: "Có lẻ đây là bức ảnh đầu tiên hai đứa chụp chung. Mặc dù lúc này chưa được thân lắm nên ẻm có lẽ cũng hơi sượng khi đứng cùng toi",
-    },
-    {
-      src: image13,
-      title: "Tập làm Chad",
-      desc: "Hong bít sao nữa thấy tấm này anh làm đẹp vl",
-    },
-    {
-      src: image14,
-      title: "Đi mall",
-      desc: "Biết em đau bụng, anh có ý mua đồ tẩm bổ, mà bổ kiểu gì em uống nửa ly anh làm đổ hết",
-    },
-    {
-      src: image15,
-      title: "Cute",
-      desc: "Khúc này hình như mới bị giận mới làm lành hay gì nè.",
-    },
-    {
-      src: image16,
-      title: "Tấm này xinh vl",
-      desc: "Tua lại một tí xíu, để làm rõ. Tấm này là do anh chụp nha",
-    },
-  ];
-
-  const [showCount, setShowCount] = useState(6);
-  const [fullscreenImg, setFullscreenImg] = useState(null);
-
   return (
-    <div className="relative min-h-screen bg-black">
+    <div className="relative min-h-screen bg-gradient-to-b from-black via-[#0d0512] to-black text-white font-sans">
       <Navbar />
-      {/* HERO */}
+
+      {/* HERO SECTION */}
       <motion.main
-        className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-black px-2 sm:px-4"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden"
         variants={sectionFade}
         initial="hidden"
         animate="visible"
@@ -162,96 +164,84 @@ const Homepage = () => {
         <div className="absolute inset-0">
           <img
             src={image2}
-            alt="bg"
-            className="w-full h-full object-cover object-center"
+            alt="background love"
+            className="w-full h-full object-cover brightness-[0.65] scale-110"
           />
-          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/90" />
         </div>
-        <div className="relative z-10 text-center px-2 w-full max-w-2xl mx-auto">
-          <span className="px-3 py-1 rounded-full bg-pink-700/40 text-pink-200 text-xs tracking-widest font-semibold">
-            HAPPY NEW YEAR
-          </span>
-          <h1 className="mt-4 text-3xl sm:text-5xl md:text-6xl font-extrabold text-white">
-          Anh <span className="text-pink-500">&amp;</span> Em
-          </h1>
-          <p className="mt-6 max-w-xl mx-auto text-gray-200 text-sm sm:text-base">
-            
-            <br />
-            Chào mừng em đến với trang web này. Đây chính là những gì mà anh muốn bày tỏ cho ngày hôm nay
-          </p>
+
+        <div className="relative z-10 text-center px-6 max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, duration: 1.4 }}
+            className="inline-block px-6 py-3 rounded-full bg-gradient-to-r from-pink-600/30 to-purple-600/30 backdrop-blur-md border border-pink-400/30 text-pink-200 text-sm md:text-base tracking-widest font-medium"
+          >
+            HAPPY NEW YEAR 2026
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 1.3 }}
+            className="mt-8 text-5xl sm:text-7xl md:text-8xl font-extrabold bg-gradient-to-r from-white via-pink-300 to-purple-300 bg-clip-text text-transparent leading-tight"
+          >
+            Anh <span className="text-pink-500">&</span> Em
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.3, duration: 1.5 }}
+            className="mt-10 text-lg sm:text-xl md:text-2xl text-gray-200/90 max-w-3xl mx-auto leading-relaxed"
+          >
+            Xin chào, anh chưa thể tặng quà gì. Nhưng đây là những gì anh muốn bày tỏ gửi gắm đến em
+          </motion.p>
         </div>
       </motion.main>
-      {/* COUNTER */}
+
+      {/* COUNTER SECTION */}
       <motion.section
-        className="py-8 md:py-16 bg-[#181018]"
+        className="py-16 md:py-24 relative"
         variants={sectionFade}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true }}
       >
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white text-center mb-2">
-          Máy đếm thời gian bên nhau
-        </h2>
-        <p className="text-gray-300 text-center mb-6 md:mb-10 text-sm sm:text-base">
-          Thời gian đã bên nhau
-        </p>
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 md:gap-10 max-w-xs sm:max-w-2xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
-            viewport={{ once: true, amount: 0.3 }}
-            className="w-24 h-24 sm:w-32 sm:h-32 md:w-[180px] md:h-[180px] rounded-2xl bg-[#1a0e18] border border-[#2a1126] flex flex-col items-center justify-center shadow-lg"
-          >
-            <span className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-pink-500">
-              {String(counter.days).padStart(2, "0")}
-            </span>
-            <span className="text-xs tracking-widest text-pink-300 mt-2">
-              NGÀY
-            </span>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut", delay: 0.25 }}
-            viewport={{ once: true, amount: 0.3 }}
-            className="w-24 h-24 sm:w-32 sm:h-32 md:w-[180px] md:h-[180px] rounded-2xl bg-[#1a0e18] border border-[#2a1126] flex flex-col items-center justify-center shadow-lg"
-          >
-            <span className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-pink-500">
-              {String(counter.hours).padStart(2, "0")}
-            </span>
-            <span className="text-xs tracking-widest text-pink-300 mt-2">
-              GIỜ
-            </span>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut", delay: 0.4 }}
-            viewport={{ once: true, amount: 0.3 }}
-            className="w-24 h-24 sm:w-32 sm:h-32 md:w-[180px] md:h-[180px] rounded-2xl bg-[#1a0e18] border border-[#2a1126] flex flex-col items-center justify-center shadow-lg"
-          >
-            <span className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-pink-500">
-              {String(counter.minutes).padStart(2, "0")}
-            </span>
-            <span className="text-xs tracking-widest text-pink-300 mt-2">
-              PHÚT
-            </span>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut", delay: 0.55 }}
-            viewport={{ once: true, amount: 0.3 }}
-            className="w-24 h-24 sm:w-32 sm:h-32 md:w-[180px] md:h-[180px] rounded-2xl bg-[#1a0e18] border border-[#2a1126] flex flex-col items-center justify-center shadow-lg"
-          >
-            <span className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-pink-500">
-              {String(counter.seconds).padStart(2, "0")}
-            </span>
-            <span className="text-xs tracking-widest text-pink-300 mt-2">
-              GIÂY
-            </span>
-          </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0f0714] to-transparent pointer-events-none" />
+
+        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-6">
+            Thời gian bên nhau
+          </h2>
+          <p className="text-gray-400 text-lg mb-12">
+            Mỗi giây trôi qua đều là một món quà
+          </p>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
+            {["days", "hours", "minutes", "seconds"].map((unit, i) => (
+              <motion.div
+                key={unit}
+                initial={{ opacity: 0, y: 60 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.15 + 0.3, duration: 0.9 }}
+                className="bg-gradient-to-br from-[#1c1126] to-[#140c1a] border border-pink-900/40 rounded-2xl p-6 md:p-8 shadow-2xl shadow-pink-900/30 backdrop-blur-sm"
+              >
+                <div className="text-5xl md:text-7xl font-black text-pink-400 tracking-tighter">
+                  {String(counter[unit]).padStart(2, "0")}
+                </div>
+                <div className="mt-3 text-sm md:text-base tracking-widest text-pink-300/80 uppercase font-medium">
+                  {unit === "days"
+                    ? "NGÀY"
+                    : unit === "hours"
+                    ? "GIỜ"
+                    : unit === "minutes"
+                    ? "PHÚT"
+                    : "GIÂY"}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </motion.section>
       {/* TIMELINE */}
@@ -266,7 +256,7 @@ const Homepage = () => {
           </p>
         </div>
         <div className="relative max-w-4xl mx-auto px-2 md:px-4">
-          <div className="absolute left-1/2 top-0 h-full w-0.5 -translate-x-1/2 bg-linear-to-b from-pink-500 via-pink-900/60 to-pink-500" />
+          <div className="absolute left-1/2 top-0 h-full w-0.5 -translate-x-1/2 bg-gradient-to-b from-pink-500 via-pink-900/60 to-pink-500" />
           <div className="flex flex-col gap-10 md:gap-28">
             <motion.div
               initial="hidden"
@@ -294,6 +284,7 @@ const Homepage = () => {
               </div>
               <div className="w-1/2 pl-12"></div>
             </motion.div>
+
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -322,6 +313,7 @@ const Homepage = () => {
                 </span>
               </div>
             </motion.div>
+
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -351,6 +343,7 @@ const Homepage = () => {
               </div>
               <div className="w-1/2 pl-12"></div>
             </motion.div>
+
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -383,6 +376,7 @@ const Homepage = () => {
                 </span>
               </div>
             </motion.div>
+
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -422,6 +416,7 @@ const Homepage = () => {
               </div>
               <div className="w-1/2 pl-12"></div>
             </motion.div>
+
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -457,137 +452,257 @@ const Homepage = () => {
           </div>
         </div>
       </section>
-      {/* GALLERY */}
-      <section className="py-8 md:py-20 bg-[#1a0e18]">
-        <div className="max-w-5xl mx-auto px-2 sm:px-4">
-          <div className="mb-6 md:mb-8">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
-              Gallery Ảnh
+
+      {/* GALLERY SECTION */}
+      <motion.section
+        className="py-16 md:py-24 bg-gradient-to-b from-[#0f0714] to-black"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
+              Album Kỷ Niệm
             </h2>
-            <p className="text-gray-300 mt-1 text-sm sm:text-base">
-              Từng tấm hình, vạn lời yêu
+            <p className="mt-4 text-gray-400 text-lg">
+              Di chuột để xem chi tiết • Nhấn để phóng to
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
             {galleryImages.slice(0, showCount).map((img, idx) => (
-              <div
+              <Tilt
                 key={idx}
-                className="bg-[#231526] rounded-2xl p-4 flex flex-col items-center shadow-lg transition-transform duration-300 hover:scale-105 cursor-pointer"
-                onClick={() => setFullscreenImg(img.src)}
+                tiltMaxAngleX={10}
+                tiltMaxAngleY={10}
+                scale={1.06}
+                transitionSpeed={450}
+                gyroscope={true}
               >
-                <img
-                  src={img.src}
-                  alt={img.title}
-                  className="w-full h-48 object-cover rounded-xl mb-4"
-                />
-                <div className="text-white font-semibold">{img.title}</div>
-                <div className="text-gray-400 text-sm mt-1">{img.desc}</div>
-              </div>
+                <motion.div
+                  className="group relative rounded-3xl overflow-hidden shadow-2xl shadow-black/70 cursor-pointer bg-gradient-to-b from-[#1e1322] to-[#120a18] border border-pink-900/30"
+                  onClick={() => setFullscreenImg(img.src)}
+                  initial={{ opacity: 0, y: 70 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: idx * 0.07 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <img
+                      src={img.src}
+                      alt={img.title}
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-115"
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-600" />
+
+                    <div className="absolute inset-x-0 bottom-0 p-6 translate-y-8 group-hover:translate-y-0 transition-all duration-500 ease-out gap-4 flex flex-col">
+                      <h3 className="text-xl font-semibold text-white drop-shadow-lg">
+                        {img.title}
+                      </h3>
+                    </div>
+
+                    <div className="absolute inset-0 ring-2 ring-pink-500/0 group-hover:ring-pink-500/50 group-hover:ring-offset-4 group-hover:ring-offset-black transition-all duration-700 rounded-3xl pointer-events-none opacity-0 group-hover:opacity-100" />
+                  </div>
+                </motion.div>
+              </Tilt>
             ))}
           </div>
+
           {showCount < galleryImages.length && (
-            <div className="flex justify-center mt-8">
+            <div className="flex justify-center mt-16">
               <button
-                className="px-6 py-2 rounded-full bg-pink-500 text-white font-semibold text-base shadow-lg hover:bg-pink-600 transition"
-                onClick={() => setShowCount(showCount + 6)}
+                onClick={() => setShowCount((c) => c + 8)}
+                className="px-10 py-4 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-semibold text-lg shadow-xl shadow-pink-900/50 transition-all duration-300 hover:scale-105 active:scale-95"
               >
-                Xem thêm
+                Xem thêm kỷ niệm
               </button>
             </div>
           )}
-          {fullscreenImg && (
-            <div
-              className="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999]"
-              onClick={() => setFullscreenImg(null)}
+        </div>
+      </motion.section>
+
+      {/* FULLSCREEN MODAL */}
+      <AnimatePresence>
+        {fullscreenImg && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-[9999] flex items-center justify-center p-4"
+            onClick={() => setFullscreenImg(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", damping: 18, stiffness: 180 }}
+              className="relative max-w-[95vw] max-h-[95vh]"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative flex items-center justify-center">
-                <button
-                  className="absolute top-2 right-2 z-10 bg-pink-600/80 hover:bg-pink-700 text-white rounded-full p-2 shadow-lg"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setFullscreenImg(null);
-                  }}
-                  aria-label="Đóng"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-                <img
-                  src={fullscreenImg}
-                  alt="fullscreen"
-                  className="w-[90vw] max-w-md h-[70vh] object-cover rounded-2xl shadow-2xl animate-[scaleIn_0.3s] bg-black"
-                  onClick={(e) => e.stopPropagation()}
-                />
-              </div>
-            </div>
-          )}
-          {/* Thư gửi người thương */}
-          <div className="mt-16 flex flex-col items-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
-              Thư Gửi Em
-            </h2>
-            <div className="bg-[#231526] rounded-2xl p-6 flex flex-col items-center shadow-lg max-w-lg w-full mx-auto">
-              <div className="mb-4">
-                <div className="w-16 h-16 rounded-xl bg-pink-700/30 flex items-center justify-center mx-auto shadow-lg">
-                  <span className="text-pink-400 text-3xl">💌</span>
+              <button
+                className="absolute top-4 right-4 text-white p-2 rounded-full transition-colors shadow-lg bg-transparent"
+                onClick={() => setFullscreenImg(null)}
+              >
+                <FaTimes size={28} />
+              </button>
+              <img
+                src={fullscreenImg}
+                alt="fullscreen memory"
+                className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl ring-1 ring-white/10"
+              />
+              <div className="mt-6 text-center">
+                <div className="text-2xl font-bold text-white mb-2">
+                  {galleryImages.find(img => img.src === fullscreenImg)?.title}
+                </div>
+                <div className="text-pink-200 text-base md:text-lg">
+                  {galleryImages.find(img => img.src === fullscreenImg)?.desc}
                 </div>
               </div>
-              <div className="text-white text-base md:text-lg font-semibold mb-2">
-                "Gửi Phương Kiều của anh."
-              </div>
-              <div className="text-gray-300 text-sm md:text-base mb-4 text-center">
-                Cảm ơn em đã xuất hiện và làm cho cuộc sống của anh trở nên rực
-                rỡ hơn theo cách khác tốt đẹp hơn. Từng ngày bên em là một món
-                quà vô giá mà anh luôn trân trọng. Dù chúng ta đã đi qua không
-                ít khó khăn và thử thách, anh vẫn tin rằng chỉ cần còn nắm tay
-                nhau, chúng ta sẽ vượt qua tất cả để cùng nhau xây dựng một
-                tương lai tươi sáng và bình yên hơn.
-              </div>
-              <hr className="w-full border-t border-pink-500 my-4" />
-              <div className="text-gray-300 text-sm md:text-base mb-4 text-center">
-                Bước sang năm mới, anh mong em luôn mạnh khỏe, bình an, giữ được
-                nụ cười mà anh yêu nhất, và tiếp tục là chính em – dịu dàng, ấm
-                áp nhưng cũng rất kiên cường. Anh thương em rất nhiều và mong
-                rằng chúng ta sẽ còn thật nhiều kỷ niệm đẹp bên nhau trong những
-                năm tháng sắp tới.
-              </div>
-              <hr className="w-full border-t border-pink-500 my-4" />
-              <div className="text-gray-300 text-sm md:text-base mb-4 text-center">
-                Nhân dịp năm mới, anh cũng xin gửi lời chúc chân thành nhất đến
-                bố mẹ và anh Long nha. Chúc mọi người sẽ luôn dồi dào sức khỏe
-                đặc biệt là có thật nhiều sức khỏe để có thể kiếm được thật
-                nhiều tiền, an khang, hạnh phúc, mọi điều thuận lợi và tràn ngập
-                tiếng cười trong ân sủng của Chúa. Năm mới, mong rằng yêu thương
-                sẽ ở lại, bình yên sẽ đủ đầy, và chúng ta vẫn chọn nhau – mỗi
-                ngày.
-              </div>
-              <div className="flex items-center gap-2 mt-2 justify-center">
-                <span className="text-pink-400 text-xl"><FaHeart /></span>
-                <span className="text-white font-semibold">Đạt</span>
-              </div>
-              <div className="w-full flex justify-center mt-1">
-                <span className="text-gray-400 text-xs text-center">Chúc mừng năm mới</span>
-              </div>
-            </div>
-            <div className="mt-8 text-center text-gray-400 text-xs">
-              <span className="inline-block mr-2">🎵</span>
-              Background music:{" "}
-              <a className="text-pink-400 underline">
-                Beautiful In White - Shane Filan
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* Scroll to top icon fixed bottom right */}
-      <div
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed right-4 bottom-40 z-50 cursor-pointer animate-glow bg-pink-600/80 hover:bg-pink-700 text-white rounded-full p-3 shadow-2xl transition-all duration-300"
-        style={{ boxShadow: '0 0 16px #ff1fa4, 0 0 32px #ff1fa4' }}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* LETTER SECTION */}
+      <motion.section
+        className="py-24 md:py-32 relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-7 h-7 animate-bounce">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+        <div className="absolute inset-0 bg-gradient-radial from-pink-900/10 via-transparent to-transparent pointer-events-none" />
+
+        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+          {!letterOpen ? (
+            <motion.div
+              className="inline-flex flex-col items-center cursor-pointer group"
+              onClick={() => setLetterOpen(true)}
+              whileHover={{ scale: 1.06 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="relative">
+                <FaEnvelope className="text-9xl md:text-[12rem] text-pink-500/80 group-hover:text-pink-400 transition-colors duration-700 drop-shadow-2xl" />
+                <motion.div
+                  className="absolute inset-0 bg-pink-500/30 rounded-full blur-3xl -z-10"
+                  animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0.9, 0.5] }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              </div>
+              <p className="mt-8 text-2xl md:text-3xl font-medium text-pink-300 group-hover:text-pink-200 transition-colors">
+                Nhấn để mở thư của anh...
+              </p>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 100, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 1.4, ease: "easeOut" }}
+              className="bg-gradient-to-br from-[#1a0f22] via-[#140c1a] to-[#0c0512] rounded-3xl p-10 md:p-16 shadow-2xl shadow-pink-900/50 border border-pink-800/40 relative overflow-hidden"
+            >
+              {/* floating glow */}
+              <div className="absolute -top-32 -right-32 w-96 h-96 bg-pink-600/10 rounded-full blur-3xl animate-pulse-slow" />
+              <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-3xl animate-pulse-slow delay-1500" />
+
+              <div className="relative z-10">
+                <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 bg-clip-text text-transparent mb-12 text-center">
+                  Gửi Phương Kiều của anh
+                </h2>
+
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: { staggerChildren: 0.6 },
+                    },
+                  }}
+                  className="space-y-8 md:space-y-10 text-lg md:text-2xl leading-relaxed text-gray-200/90 font-light text-center md:text-left"
+                >
+                  <motion.p
+                    variants={{
+                      hidden: { opacity: 0, y: 30 },
+                      visible: { opacity: 1, y: 0 },
+                    }}
+                  >
+                    Cảm ơn em đã xuất hiện và làm cho cuộc sống của anh trở nên
+                    rực rỡ hơn theo cách khác tốt đẹp hơn. Từng ngày bên em là
+                    một món quà vô giá mà anh luôn trân trọng.
+                  </motion.p>
+
+                  <motion.p
+                    variants={{
+                      hidden: { opacity: 0, y: 30 },
+                      visible: { opacity: 1, y: 0 },
+                    }}
+                  >
+                    Dù chúng ta đã đi qua không ít khó khăn và thử thách, anh
+                    mong rằng tụi mình sẽ vượt qua mọi khó khăn và đến được đích đến cuối cùng.
+                  </motion.p>
+
+                  <motion.p
+                    variants={{
+                      hidden: { opacity: 0, y: 30 },
+                      visible: { opacity: 1, y: 0 },
+                    }}
+                  >
+                    Bước sang năm mới, anh mong em luôn mạnh khỏe, bình an, giữ
+                    được nụ cười mà anh yêu nhất, và tiếp tục làm người iu của anh – dịu
+                    dàng, ấm áp và mãi dễ thưn.
+                  </motion.p>
+
+                  <motion.p
+                    variants={{
+                      hidden: { opacity: 0, y: 30 },
+                      visible: { opacity: 1, y: 0 },
+                    }}
+                  >
+                    Anh cũng xin gửi lời chúc chân thành nhất đến bố mẹ và anh
+                    Long. Chúc mọi người luôn dồi dào sức khỏe, an khang, hạnh
+                    phúc, và tràn đầy tiếng cười trong ân sủng của Chúa.
+                  </motion.p>
+
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, y: 30 },
+                      visible: { opacity: 1, y: 0 },
+                    }}
+                    className="pt-10 flex items-center justify-center gap-4 text-3xl"
+                  >
+                    <FaHeart className="text-pink-500 animate-pulse" />
+                    <span className="font-medium text-pink-300">Đạt</span>
+                  </motion.div>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </motion.section>
+
+      {/* SCROLL TO TOP */}
+      <div
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="fixed right-6 bottom-8 z-50 cursor-pointer bg-gradient-to-br from-pink-600 to-purple-600 text-white p-5 rounded-full shadow-2xl shadow-pink-900/60 hover:scale-110 transition-all duration-300"
+      >
+        <svg
+          className="w-8 h-8"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2.5}
+            d="M5 10l7-7m0 0l7 7m-7-7v18"
+          />
         </svg>
       </div>
     </div>
