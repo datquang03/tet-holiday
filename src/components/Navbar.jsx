@@ -15,6 +15,16 @@ const Navbar = () => {
     if (!audioRef.current) return;
     audioRef.current.volume = volume;
     audioRef.current.play().catch(() => {});
+
+    // Tự động phát nhạc khi user có tương tác đầu tiên
+    const tryPlay = () => {
+      if (audioRef.current) {
+        audioRef.current.play().catch(() => {});
+        window.removeEventListener('click', tryPlay);
+      }
+    };
+    window.addEventListener('click', tryPlay);
+    return () => window.removeEventListener('click', tryPlay);
   }, []);
 
   // Khi volume thay đổi

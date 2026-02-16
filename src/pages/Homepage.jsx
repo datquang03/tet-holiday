@@ -16,6 +16,10 @@ import image9 from "../assets/image9.jpg";
 import image10 from "../assets/image10.jpg";
 import image11 from "../assets/image11.jpg";
 import image12 from "../assets/image12.jpg";
+import image13 from "../assets/image13.jpg";
+import image14 from "../assets/image14.jpg";
+import image15 from "../assets/image15.jpg";
+import image16 from "../assets/image16.jpg";
 
 const sectionFade = {
   hidden: { opacity: 0, y: 50 },
@@ -119,6 +123,26 @@ const Homepage = () => {
       src: image12,
       title: "First pic",
       desc: "Có lẻ đây là bức ảnh đầu tiên hai đứa chụp chung. Mặc dù lúc này chưa được thân lắm nên ẻm có lẽ cũng hơi sượng khi đứng cùng toi",
+    },
+    {
+      src: image13,
+      title: "Tập làm Chad",
+      desc: "Hong bít sao nữa thấy tấm này anh làm đẹp vl",
+    },
+    {
+      src: image14,
+      title: "Đi mall",
+      desc: "Biết em đau bụng, anh có ý mua đồ tẩm bổ, mà bổ kiểu gì em uống nửa ly anh làm đổ hết",
+    },
+    {
+      src: image15,
+      title: "Cute",
+      desc: "Khúc này hình như mới bị giận mới làm lành hay gì nè.",
+    },
+    {
+      src: image16,
+      title: "Tấm này xinh vl",
+      desc: "Tua lại một tí xíu, để làm rõ. Tấm này là do anh chụp nha",
     },
   ];
 
